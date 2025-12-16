@@ -250,11 +250,9 @@ void swp00_device::streaming_block::dpcm_step(u8 input)
 	int sample = m_dpcm_s1 + (delta << scale) / 16;
 	delta -= 16;
 
-	if(sample < -0x8000) {
-		sample = -0x8000;
-	} else if(sample > limit) {
-		sample = limit;
-	}
+	sample = std::max(sample, -0x8000);
+	sample = std::min(sample, limit);
+
 	m_dpcm_s1 = sample;
 
 	switch(mode) {
