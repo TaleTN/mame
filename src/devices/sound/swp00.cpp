@@ -248,19 +248,15 @@ void swp00_device::streaming_block::dpcm_step(u8 input)
 
 	s32 delta = m_dpcm_delta + (dpcm_expand[input] << 4);
 	int sample = m_dpcm_s1 + (delta << scale) / 16;
-	delta -= 16;
 
 	sample = std::max(sample, -0x8000);
 	sample = std::min(sample, limit);
 
 	m_dpcm_s1 = sample;
 
-	switch(mode) {
-	case 0: delta = delta * 7 / 8; break;
-	case 1: delta = delta * 3 / 4; break;
-	case 2: delta = delta     / 2; break;
-	case 3: delta = 0; break;
-	}
+	static const u8 mul[4] = { 0x07, 0x06, 0x04, 0x00 };
+	delta = ((delta - 16) * mul[mode]) / 8;
+
 	m_dpcm_delta = delta;
 }
 
