@@ -250,15 +250,14 @@ void swp00_device::streaming_block::dpcm_step(u8 input)
 
 	m_dpcm_s0 = m_dpcm_s1;
 
-	s32 delta = m_dpcm_delta + dpcm_expand[input];
-	s32 sample = m_dpcm_s1 + (delta << scale);
+	s32 delta = m_dpcm_delta + (dpcm_expand[input] << 4);
+	int sample = m_dpcm_s1 + (delta << scale) / 16;
+	delta -= 16;
 
 	if(sample < -0x8000) {
 		sample = -0x8000;
-		delta = 0;
 	} else if(sample > limit) {
 		sample = limit;
-		delta = 0;
 	}
 	m_dpcm_s1 = sample;
 
