@@ -158,10 +158,6 @@ const std::array<s16, 256> swp00_device::streaming_block::dpcm_expand = []() {
 	return deltas;
 }();
 
-const std::array<s32, 8> swp00_device::streaming_block::max_value = {
-	0x7fff, 0x7ffe, 0x7ffc, 0x7ff8, 0x7ff0, 0x7fe0, 0x7fc0, 0x7f80
-};
-
 void swp00_device::streaming_block::clear()
 {
 	m_phase = 0x8000;
@@ -246,7 +242,7 @@ void swp00_device::streaming_block::dpcm_step(u8 input)
 {
 	u32 mode = m_format & 3;
 	u32 scale = (m_format >> 2) & 7;
-	s32 limit = max_value[scale];
+	s32 limit = (0x7fff << scale) & 0x7fff;
 
 	m_dpcm_s0 = m_dpcm_s1;
 

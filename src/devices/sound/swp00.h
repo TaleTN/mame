@@ -28,7 +28,6 @@ protected:
 private:
 	struct streaming_block {
 		static const std::array<s16, 256> dpcm_expand;
-		static const std::array<s32, 8> max_value;
 
 		u16 m_phase;
 		u16 m_start;
